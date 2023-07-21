@@ -1,24 +1,24 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-"""City Module
-
-This Module inherits from BaseModel class.
-City Module contains the attributes to be assigned
-to the cities.
-"""
-
-from models.base_model import BaseModel
+#!/usr/bin/python
+""" holds class City"""
+import models
+from models.base_model import BaseModel, Base
+from os import getenv
+import sqlalchemy
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.orm import relationship
 
 
-class City(BaseModel):
-    """City Class
+class City(BaseModel, Base):
+    """Representation of city """
+    if models.storage_t == "db":
+        __tablename__ = 'cities'
+        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
+        name = Column(String(128), nullable=False)
+        places = relationship("Place", backref="cities")
+    else:
+        state_id = ""
+        name = ""
 
-    This is the City Class ...
-
-    Attributes:
-        state_id (str): The UUID of the State the City belongs to
-        name (str): The City name
-
-    """
-    state_id = ''
-    name = ''
+    def __init__(self, *args, **kwargs):
+        """initializes city"""
+        super().__init__(*args, **kwargs)
